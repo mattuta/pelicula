@@ -3,6 +3,7 @@
 ## Descrição
 
 O Projeto SysPelícula é uma aplicação de gerenciamento de filmes, câmeras e relatórios fotográficos para profissionais de fotografia e produção de filmes. Ele permite o registro, acompanhamento e gerenciamento de informações relacionadas a filmes, câmeras e relatórios de produção.
+O projeto ainda está em uma fase inicial, por isso muitas funcionalidades ainda precisar ser implementadas e outras refinadas, como implementação de validações e preenchimento.
 
 ## Funcionalidades
 
