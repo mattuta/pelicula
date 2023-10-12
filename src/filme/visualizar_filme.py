@@ -10,8 +10,6 @@ def tela_visualizar_filme(id_filme):
     modulo_filme = importlib.import_module('src.filme.filme')
     resultado_filme = modulo_filme.consultar_filme(id_filme)
 
-    #resultado_filme = relato.consultar_filme(id_filme)
-
     layout = [
         [sg.Text('FICHA FILME')],
         [sg.Text('MARCA:', size=(15, 1)), sg.Text(resultado_filme[1])],
@@ -24,6 +22,7 @@ def tela_visualizar_filme(id_filme):
         [sg.Text('QUEIMADO:', size=(15, 1)), sg.Text(resultado_filme[7])],
         [sg.Text('AQUISIÇÃO:', size=(15, 1)), sg.Text(resultado_filme[8])],
         [sg.Text('VALIDADE:', size=(15, 1)), sg.Text(resultado_filme[9])],
+        [sg.Text('NOTAS:', size=(15, 1)), sg.Text(resultado_filme[11])],
         [sg.Button('EDITAR', button_color='green'), sg.Button('EXCLUIR', button_color='red')]
     ]
 
@@ -57,6 +56,8 @@ def tela_visualizar_filme(id_filme):
             break
         if event == 'EDITAR':
             window.close()
+            modulo_grid = importlib.import_module('src.filme.editarFilme')
+            modulo_grid.tela_editar_filme(resultado_filme[10])
 
 
     window.close()

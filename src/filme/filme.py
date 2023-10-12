@@ -19,7 +19,7 @@ def consultar_filme(id_filme):
                                     WHEN queimado = 1 THEN 'SIM'
                                     WHEN queimado = 0 THEN 'NÃO'
                                 END AS queimado,
-                                data_aquisicao, data_validade, idFilme
+                                data_aquisicao, data_validade, idFilme, notas
                         FROM filme
                         WHERE idFilme = ?''', (id_filme,))
 
@@ -50,4 +50,31 @@ def excluir_filme(id_filme):
         
     except conn.Error as e:
         print(f"Erro ao excluir filme: {e}")
+        return str(e)
+    
+
+def atualizar_filme(filme):
+
+    conn = sql.connect('pelicula.db')
+    cursor = conn.cursor()
+
+    print(filme['nome'])
+
+    try:
+        cursor.execute('''UPDATE filme
+                       SET nome = ?, marca = ?, formato = ?, iso = ?, tipo = ?, cinema = ?,
+                       rebobinado = ?, queimado = ?, data_aquisicao = ?, data_validade = ?,
+                       notas = ? 
+                       WHERE idFilme = ? ''',
+                    (filme['nome'], filme['marca'], filme['formato'], filme['iso'], filme['tipo'],
+                        filme['cinema'], filme['rebobinado'], filme['queimado'], filme['data_aquisicao'],
+                        filme['data_validade'], filme['notas'], filme['idFilme']))
+        
+        conn.commit()
+        conn.close()
+
+        return "OK"
+    
+    except conn.Error as e:
+        print(f"Erro ao adicionar filme: {e}")
         return str(e)
