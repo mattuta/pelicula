@@ -32,7 +32,7 @@ def  consultar_camera():
     
     try:
         cursor.execute('''SELECT marca, modelo, formato, fabricante, num_serie, valor_compra,
-                        valor_venda, data_aquisicao, data_venda, notas FROM camera''')
+                        valor_venda, data_aquisicao, data_venda, notas, idCamera FROM camera''')
 
         rows = cursor.fetchall()
 
@@ -119,6 +119,15 @@ def grid_camera(resultados):
                 for row_index in selected_rows:
                     resultados.pop(row_index)
                 window['-TABLE-'].update(values=resultados)
+        elif event == '-TABLE-':
+            if values['-TABLE-']:
+                selected_row = values['-TABLE-'][0]
+                id_camera = resultados[selected_row][10] 
+                print(f"ID {id_camera}")
+                window.close()
+                modulo_camera = importlib.import_module('src.camera.visualizar_camera')
+                modulo_camera.tela_visualizar_camera(id_camera)
+
 
     window.close()
 
