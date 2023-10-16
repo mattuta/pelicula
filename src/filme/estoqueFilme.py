@@ -43,7 +43,7 @@ def  consultar_filme():
     cursor = conn.cursor()
     
     try:
-        cursor.execute('''SELECT nome, marca, formato, iso, tipo, cinema, rebobinado, queimado FROM filme''')
+        cursor.execute('''SELECT nome, marca, formato, iso, tipo, cinema, rebobinado, queimado, idFilme FROM filme''')
 
         rows = cursor.fetchall()
 
@@ -130,6 +130,14 @@ def grid(resultados):
                 for row_index in selected_rows:
                     resultados.pop(row_index)
                 window['-TABLE-'].update(values=resultados)
+        elif event == '-TABLE-':
+            if values['-TABLE-']:
+                selected_row = values['-TABLE-'][0]
+                id_filme = resultados[selected_row][8]  # Obtém o filme da linha clicada
+                print(f"ID {id_filme}")
+                window.close()
+                modulo_filme = importlib.import_module('src.filme.visualizar_filme')
+                modulo_filme.tela_visualizar_filme(id_filme)
         
 
     window.close()
