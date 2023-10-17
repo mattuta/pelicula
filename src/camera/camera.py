@@ -1,6 +1,36 @@
 import sqlite3 as sql
 import importlib
 
+def consultar_combo_camera(id_camera):
+    conn = sql.connect('pelicula.db')
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(''' SELECT marca, modelo, formato, fabricante, num_serie,
+                                valor_compra, valor_venda, data_aquisicao, data_venda, notas, idCamera
+                        FROM camera
+                        WHERE idCamera <> ?''', (id_camera,))
+
+        rows = cursor.fetchall()
+
+        resultados = []
+
+        for row in rows:
+            resultados_transformado = list(row)
+            resultados.append(resultados_transformado)
+
+        for row in resultados:
+            print(row)
+        
+        conn.close()
+
+        return resultados
+
+    except conn.Error as e:
+        print(f"Erro ao buscar filme: {e}")
+        return str(e)
+    
+
 def consultar_camera(id_camera):
     conn = sql.connect('pelicula.db')
     cursor = conn.cursor()

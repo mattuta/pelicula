@@ -1,6 +1,35 @@
 import sqlite3 as sql
 import importlib
 
+def consultar_combo_filme(id_filme):
+    conn = sql.connect('pelicula.db')
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''SELECT idFilme, marca, nome, formato, iso 
+                       FROM filme 
+                       WHERE queimado = 0''')
+
+        rows = cursor.fetchall()
+
+        resultados = []
+
+        for row in rows:
+            resultados_transformado = list(row)
+            resultados.append(resultados_transformado)
+
+        for row in resultados:
+            print(row)
+        
+        conn.close()
+
+        return resultados
+
+    except conn.Error as e:
+        print(f"Erro ao buscar filme: {e}")
+        return str(e)
+
+
 def consultar_filme(id_filme):
     conn = sql.connect('pelicula.db')
     cursor = conn.cursor()

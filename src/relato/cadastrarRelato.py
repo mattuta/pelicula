@@ -1,3 +1,4 @@
+import importlib
 import PySimpleGUI as sg
 import sqlite3
 import datetime as dt
@@ -31,11 +32,16 @@ def inserir_relato(dados_relato):
                         dados_relato['id_camera'], dados_relato['data_inicio'], dados_relato['data_fim'],
                         dados_relato['notas'])
                        )
+        
+        id_relato = cursor.lastrowid
 
         cursor.execute('UPDATE filme SET queimado = 1 WHERE idFilme = ?', (dados_relato['id_filme'],))
 
         conn.commit()
-        conn.close()
+        conn.close() 
+
+        modulo_relato = importlib.import_module('src.relato.visualizar_relato')
+        modulo_relato.tela_visualizar_relato(id_relato)
 
         return "OK"
     except sqlite3.Error as e:
@@ -73,6 +79,8 @@ def tela_cadastrar_relato():
 
             values['id_filme'] = filme_index
             values['id_camera'] = camera_index
+            
+            window.close()
             
             inserir_relato(values)
 
