@@ -1,5 +1,7 @@
 import PySimpleGUI as sg
 import importlib
+from config import janela_altura, janela_largura
+
 
 def tela_visualizar_camera(id_camera):
     sg.theme('Reddit')
@@ -22,7 +24,7 @@ def tela_visualizar_camera(id_camera):
         [sg.Button('EDITAR', button_color='green'), sg.Button('EXCLUIR', button_color='red'), sg.Button('Voltar', button_color='blue')]
     ]
 
-    window = sg.Window('VISUALIZAR CAMERA', layout, size=(500, 400))
+    window = sg.Window('VISUALIZAR CAMERA', layout, size=(janela_altura, janela_largura))
 
     while True:
         event, values = window.read()

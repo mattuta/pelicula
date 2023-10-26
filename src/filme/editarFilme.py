@@ -4,6 +4,7 @@ import datetime as dt
 from src.principal.menu_principal import tela_menu_principal
 import src.filme.menu_filme as tela_menu_filme
 import importlib
+from config import janela_altura, janela_largura
 
 
 def  inserir_filme(dados_filme):
@@ -65,7 +66,7 @@ def tela_editar_filme(id_filme):
         [sg.Button('Salvar', button_color='green'), sg.Button('Cancelar', button_color='red'), sg.Button('Voltar', button_color='blue')]
     ]
 
-    window = sg.Window('EDITAR FILME', layout, size=(500, 300))
+    window = sg.Window('EDITAR FILME', layout, size=(janela_altura, janela_largura))
 
     while True:
         event, values = window.read()

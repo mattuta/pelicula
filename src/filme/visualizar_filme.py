@@ -3,6 +3,9 @@ import sqlite3
 import datetime as dt
 import src.relato.relatos as relato
 import importlib
+from config import janela_altura, janela_largura
+
+
 
 def tela_visualizar_filme(id_filme):
     sg.theme('Reddit')
@@ -26,7 +29,7 @@ def tela_visualizar_filme(id_filme):
         [sg.Button('EDITAR', button_color='green'), sg.Button('EXCLUIR', button_color='red')]
     ]
 
-    window = sg.Window('VISUALIZAR FILME', layout, size=(500, 400))
+    window = sg.Window('VISUALIZAR FILME', layout, size=(janela_altura, janela_largura))
 
     while True:
         event, values = window.read()

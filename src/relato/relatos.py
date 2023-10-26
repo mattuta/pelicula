@@ -2,7 +2,7 @@ import importlib
 import PySimpleGUI as sg
 import sqlite3 as sql
 import src.relato.visualizar_relato as relato
-
+from config import janela_altura, janela_largura
 
 
 def consultar_relato_edit(id_relato):
@@ -57,7 +57,8 @@ def  listar_relatos():
         
         conn.close()
 
-        grid(resultados)
+        return resultados
+    
     except conn.Error as e:
         print(f"Erro ao buscar relato: {e}")
         return str(e)   
@@ -107,7 +108,7 @@ def grid(resultados):
     ]
 
     # Crie a janela
-    window = sg.Window('RELATOS', layout, resizable=True)
+    window = sg.Window('RELATOS', layout, resizable=True, size=(janela_altura, janela_largura))
 
 
     while True:
@@ -200,3 +201,77 @@ def excluir_relato(id_relato):
         print(f"Erro ao excluir relato: {e}")
         return str(e)
     
+
+def consultar_rev(id_relato):
+    conn = sql.connect('pelicula.db')
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''SELECT desc_nota, dt_nota 
+                            FROM nota_relato
+                            WHERE tp_nota = 'R' and id_relato = ?
+                        ''', (id_relato,))
+        
+        rows = cursor.fetchall()
+
+        if rows:
+            resultado_transformado = [list(row) for row in rows]
+            print(f"{resultado_transformado}")
+            conn.close()
+            return resultado_transformado
+        else:
+            lista_vazia = []  # Retorne uma lista vazia quando não houver registros
+            return lista_vazia
+        
+    except conn.Error as e:
+        return str(e)
+
+
+def consultar_scan(id_relato):
+    conn = sql.connect('pelicula.db')
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''SELECT desc_nota, dt_nota 
+                            FROM nota_relato
+                            WHERE tp_nota = 'S' and id_relato = ?
+                        ''', (id_relato,))
+        
+        rows = cursor.fetchall()
+
+        if rows:
+            resultado_transformado = [list(row) for row in rows]
+            print(f"{resultado_transformado}")
+            conn.close()
+            return resultado_transformado
+        else:
+            lista_vazia = []  # Retorne uma lista vazia quando não houver registros
+            return lista_vazia
+        
+    except conn.Error as e:
+        return str(e)
+    
+
+def consultar_obs(id_relato):
+    conn = sql.connect('pelicula.db')
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''SELECT desc_nota, dt_nota 
+                            FROM nota_relato
+                            WHERE tp_nota = 'O' and id_relato = ?
+                        ''', (id_relato,))
+        
+        rows = cursor.fetchall()
+
+        if rows:
+            resultado_transformado = [list(row) for row in rows]
+            print(f"{resultado_transformado}")
+            conn.close()
+            return resultado_transformado
+        else:
+            lista_vazia = []  # Retorne uma lista vazia quando não houver registros
+            return lista_vazia
+        
+    except conn.Error as e:
+        return str(e)

@@ -1,6 +1,8 @@
 import PySimpleGUI as sg
 import sqlite3
 import importlib
+from config import janela_altura, janela_largura
+
 
 def atualizar_queima_filme(filme_index):
     conn = sqlite3.connect('pelicula.db')
@@ -59,7 +61,8 @@ def  consultar_filme():
         
         conn.close()
 
-        grid(resultados)
+        #grid(resultados)
+        return resultados
     except conn.Error as e:
         print(f"Erro ao adicionar filme: {e}")
         return str(e)        
@@ -98,7 +101,7 @@ def transformar(valor):
     else:
         return valor
 
-def grid(resultados):
+'''def grid(resultados):
 
     # Defina as colunas da grade
     column_headings = ['Nome', 'Marca', 'Formato', 'ISO', 'Tipo', 'Cinema', 'Rebobinado', 'Queimado']
@@ -111,7 +114,7 @@ def grid(resultados):
     ]
 
     # Crie a janela
-    window = sg.Window('ESTOQUE DE FILME', layout, resizable=True)
+    window = sg.Window('ESTOQUE DE FILME', layout, resizable=True, size=(janela_altura, janela_largura))
 
     while True:
         event, values = window.read()
@@ -121,15 +124,6 @@ def grid(resultados):
             modulo_filme = importlib.import_module('src.filme.menu_filme')
             modulo_filme.tela_menu_filme()
             break
-        elif event == 'Adicionar Linha':
-            resultados.append(['', '', ''])
-            window['-TABLE-'].update(values=resultados)
-        elif event == 'Excluir Linha':
-            selected_rows = window['-TABLE-'].get_selected_rows()
-            if selected_rows:
-                for row_index in selected_rows:
-                    resultados.pop(row_index)
-                window['-TABLE-'].update(values=resultados)
         elif event == '-TABLE-':
             if values['-TABLE-']:
                 selected_row = values['-TABLE-'][0]
@@ -141,6 +135,7 @@ def grid(resultados):
         
 
     window.close()
+'''
 
 if __name__ == '__main__':
     consultar_filme()
