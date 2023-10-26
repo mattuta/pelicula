@@ -1,14 +1,15 @@
 import sqlite3 as sql
 import importlib
 
-def consultar_combo_filme(id_filme):
+def consultar_combo_camera(id_camera):
     conn = sql.connect('pelicula.db')
     cursor = conn.cursor()
 
     try:
-        cursor.execute('''SELECT idFilme, marca, nome, formato, iso 
-                       FROM filme 
-                       WHERE queimado = 0''')
+        cursor.execute(''' SELECT marca, modelo, formato, fabricante, num_serie,
+                                valor_compra, valor_venda, data_aquisicao, data_venda, notas, idCamera
+                        FROM camera
+                        WHERE idCamera <> ?''', (id_camera,))
 
         rows = cursor.fetchall()
 
@@ -28,29 +29,17 @@ def consultar_combo_filme(id_filme):
     except conn.Error as e:
         print(f"Erro ao buscar filme: {e}")
         return str(e)
+    
 
-
-def consultar_filme(id_filme):
+def consultar_camera(id_camera):
     conn = sql.connect('pelicula.db')
     cursor = conn.cursor()
 
     try:
-        cursor.execute('''SELECT nome, marca, formato, iso, tipo,
-                                CASE 
-                                    WHEN cinema = 1 THEN 'SIM'
-                                    WHEN cinema = 0 THEN 'NÃO'
-                                END AS cinema, 
-                                CASE 
-                                    WHEN rebobinado = 1 THEN 'SIM'
-                                    WHEN rebobinado = 0 THEN 'NÃO'
-                                END AS rebobinado,
-                                CASE 
-                                    WHEN queimado = 1 THEN 'SIM'
-                                    WHEN queimado = 0 THEN 'NÃO'
-                                END AS queimado,
-                                data_aquisicao, data_validade, idFilme, notas
-                        FROM filme
-                        WHERE idFilme = ?''', (id_filme,))
+        cursor.execute(''' SELECT marca, modelo, formato, fabricante, num_serie,
+                                valor_compra, valor_venda, data_aquisicao, data_venda, notas, idCamera
+                        FROM camera
+                        WHERE idCamera = ?''', (id_camera,))
 
         row = cursor.fetchone()
 
@@ -62,27 +51,27 @@ def consultar_filme(id_filme):
             return None
         
     except conn.Error as e:
-        print(f"Erro ao buscar filme: {e}")
+        print(f"Erro ao buscar camera: {e}")
         return str(e)
 
-def excluir_filme(id_filme):
+def excluir_camera(id_camera):
     conn = sql.connect('pelicula.db')
     cursor = conn.cursor()
 
-    print(f"ID FILME {id_filme}")
+    print(f"ID CAMERA {id_camera}")
 
     try:
-        cursor.execute('DELETE FROM filme WHERE idFilme = ?', (id_filme,))
+        cursor.execute('DELETE FROM camera WHERE idCamera = ?', (id_camera,))
         conn.commit()
         conn.close()
         return 1
         
     except conn.Error as e:
-        print(f"Erro ao excluir filme: {e}")
+        print(f"Erro ao excluir câmera: {e}")
         return str(e)
     
 
-def atualizar_filme(filme):
+def atualizar_camera(filme):
 
     conn = sql.connect('pelicula.db')
     cursor = conn.cursor()

@@ -1,6 +1,8 @@
 import PySimpleGUI as sg
 import sqlite3
 import datetime as dt
+from config import janela_altura, janela_largura
+
 
 def criar_tabela_camera():
     conn = sqlite3.connect('pelicula.db')
@@ -61,7 +63,7 @@ def tela_cadastrar_camera():
         [sg.Button('Salvar', button_color='green'), sg.Button('Cancelar', button_color='red')]
     ]
 
-    window = sg.Window('CADASTRAR CÂMERA', layout, size=(500, 400))
+    window = sg.Window('CADASTRAR CÂMERA', layout, size=(janela_altura, janela_largura))
 
     while True:
         event, values = window.read()

@@ -4,6 +4,8 @@ import datetime as dt
 from src.principal.menu_principal import tela_menu_principal
 import src.filme.menu_filme as tela_menu_filme
 import importlib
+from config import janela_altura, janela_largura
+
 
 def criar_tabela_filme():
     conn = sqlite3.connect('pelicula.db')
@@ -39,8 +41,13 @@ def  inserir_filme(dados_filme):
                         dados_filme['cinema'], dados_filme['rebobinado'], dados_filme['queimado'], dados_filme['data_aquisicao'],
                         dados_filme['data_validade'], dados_filme['notas']))
         
+        id_filme = cursor.lastrowid
+
         conn.commit()
         conn.close()
+
+        modulo_filme = importlib.import_module('src.filme.visualizar_filme')
+        modulo_filme.tela_visualizar_filme(id_filme)
 
         return "OK"
     except conn.Error as e:
@@ -64,7 +71,7 @@ def tela_cadastrar_filme():
         [sg.Button('Salvar', button_color='green'), sg.Button('Cancelar', button_color='red'), sg.Button('Voltar', button_color='blue')]
     ]
 
-    window = sg.Window('CADASTRAR FILME', layout, size=(500, 300))
+    window = sg.Window('CADASTRAR FILME', layout, size=(janela_altura, janela_largura))
 
     while True:
         event, values = window.read()
@@ -73,8 +80,8 @@ def tela_cadastrar_filme():
         if event == 'Salvar':
             window.close()
             inserir_filme(values)
-            modulo_filme = importlib.import_module('src.filme.menu_filme')
-            modulo_filme.tela_menu_filme()    
+            #modulo_filme = importlib.import_module('src.filme.menu_filme')
+            #modulo_filme.tela_menu_filme()    
             #break
         if event == "Voltar":
             window.close()

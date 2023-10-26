@@ -1,8 +1,11 @@
+import importlib
 import PySimpleGUI as sg
 import sqlite3
 import datetime as dt
 from src.filme.estoqueFilme import atualizar_queima_filme, consultar_filme_disponivel, obter_id_filme
 from src.camera.estoque_camera import consultar_camera_disponivel, obter_id_camera
+from config import janela_altura, janela_largura
+
 
 def criar_tabela_camera():
     conn = sqlite3.connect('pelicula.db')
@@ -31,11 +34,16 @@ def inserir_relato(dados_relato):
                         dados_relato['id_camera'], dados_relato['data_inicio'], dados_relato['data_fim'],
                         dados_relato['notas'])
                        )
+        
+        id_relato = cursor.lastrowid
 
         cursor.execute('UPDATE filme SET queimado = 1 WHERE idFilme = ?', (dados_relato['id_filme'],))
 
         conn.commit()
-        conn.close()
+        conn.close() 
+
+        modulo_relato = importlib.import_module('src.relato.visualizar_relato')
+        modulo_relato.tela_visualizar_relato(id_relato)
 
         return "OK"
     except sqlite3.Error as e:
@@ -61,7 +69,7 @@ def tela_cadastrar_relato():
         [sg.Button('Salvar', button_color='green'), sg.Button('Cancelar', button_color='red')]
     ]
 
-    window = sg.Window('CADASTRAR RELATO', layout, size=(500, 400))
+    window = sg.Window('CADASTRAR RELATO', layout, size=(janela_altura, janela_largura))
 
     while True:
         event, values = window.read()
@@ -73,6 +81,8 @@ def tela_cadastrar_relato():
 
             values['id_filme'] = filme_index
             values['id_camera'] = camera_index
+            
+            window.close()
             
             inserir_relato(values)
 

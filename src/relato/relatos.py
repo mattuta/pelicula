@@ -1,10 +1,39 @@
 import importlib
 import PySimpleGUI as sg
-import sqlite3
+import sqlite3 as sql
 import src.relato.visualizar_relato as relato
+from config import janela_altura, janela_largura
+
+
+def consultar_relato_edit(id_relato):
+    conn = sql.connect('pelicula.db')
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''SELECT r.idRelato, r.id_filme, r.id_camera,
+                            f.nome, r.cidade, r.estado, c.modelo, r.data_inicio, r.data_fim, r.notas,
+                            c.modelo, f.nome 
+                            FROM relato r
+                            INNER JOIN filme f ON f.idFilme = r.id_filme
+                            INNER JOIN camera c ON c.idCamera = r.id_camera
+                        WHERE idRelato = ?''', (id_relato,))
+
+        row = cursor.fetchone()
+
+        if row:
+            resultado = list(row)
+            conn.close()
+            return resultado
+        else:
+            return None
+        
+    except conn.Error as e:
+        print(f"Erro ao buscar relato: {e}")
+        return str(e)
+
 
 def  listar_relatos():
-    conn = sqlite3.connect('pelicula.db')
+    conn = sql.connect('pelicula.db')
     cursor = conn.cursor()
     
     try:
@@ -28,14 +57,15 @@ def  listar_relatos():
         
         conn.close()
 
-        grid(resultados)
+        return resultados
+    
     except conn.Error as e:
         print(f"Erro ao buscar relato: {e}")
         return str(e)   
 
 
 def consultar_relatos(id_relato):
-    conn = sqlite3.connect('pelicula.db')
+    conn = sql.connect('pelicula.db')
     cursor = conn.cursor()
 
     try:
@@ -78,7 +108,7 @@ def grid(resultados):
     ]
 
     # Crie a janela
-    window = sg.Window('RELATOS', layout, resizable=True)
+    window = sg.Window('RELATOS', layout, resizable=True, size=(janela_altura, janela_largura))
 
 
     while True:
@@ -100,14 +130,148 @@ def grid(resultados):
                 window['-TABLE-'].update(values=resultados)
         elif event == '-TABLE-':
             if values['-TABLE-']:
+                window.close()
                 selected_row = values['-TABLE-'][0]
                 id_relato = resultados[selected_row][6]  # Obtém o filme da linha clicada
                 
                 relato.tela_visualizar_relato(id_relato)
                 
 
-            
 
-    window.close()
+def atualizar_relato(relato):
+    
+    conn = sql.connect('pelicula.db')
+    cursor = conn.cursor()
 
- 
+  
+    if isinstance(relato['filme'], list):
+        print("É uma lista!")
+        id_filme = relato['filme'][1]
+    else:
+        print("Não é uma lista.")
+        id_filme = relato['id_filme']
+
+
+    if isinstance(relato['camera'], list):
+        print("É uma lista!")
+        id_camera = relato['camera'][10]
+    else:
+        print("Não é uma lista.")
+        id_camera = relato['id_camera']
+    
+
+
+    try:
+        query = '''UPDATE relato
+            SET id_filme = {}, cidade = '{}', estado = '{}',
+            id_camera = {}, data_inicio = '{}', data_fim = '{}',
+            notas = '{}'
+            WHERE idRelato = {}'''.format(
+                relato['id_filme'], relato['cidade'], relato['estado'],
+                id_camera, relato['data_inicio'], relato['data_final'],
+                relato['notas'], relato['idRelato'])
+        print(query)
+
+        cursor.execute(query)
+        
+        conn.commit()
+        conn.close()
+
+        return "OK"
+    
+    except conn.Error as e:
+        print(f"Erro ao atualizar relato: {e}")
+        return str(e)
+
+
+
+def excluir_relato(id_relato):
+    conn = sql.connect('pelicula.db')
+    cursor = conn.cursor()
+
+    print(f"ID RELATO {id_relato}")
+
+    try:
+        cursor.execute('DELETE FROM relato WHERE idRelato = ?', (id_relato,))
+        conn.commit()
+        conn.close()
+        return 1
+        
+    except conn.Error as e:
+        print(f"Erro ao excluir relato: {e}")
+        return str(e)
+    
+
+def consultar_rev(id_relato):
+    conn = sql.connect('pelicula.db')
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''SELECT desc_nota, dt_nota 
+                            FROM nota_relato
+                            WHERE tp_nota = 'R' and id_relato = ?
+                        ''', (id_relato,))
+        
+        rows = cursor.fetchall()
+
+        if rows:
+            resultado_transformado = [list(row) for row in rows]
+            print(f"{resultado_transformado}")
+            conn.close()
+            return resultado_transformado
+        else:
+            lista_vazia = []  # Retorne uma lista vazia quando não houver registros
+            return lista_vazia
+        
+    except conn.Error as e:
+        return str(e)
+
+
+def consultar_scan(id_relato):
+    conn = sql.connect('pelicula.db')
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''SELECT desc_nota, dt_nota 
+                            FROM nota_relato
+                            WHERE tp_nota = 'S' and id_relato = ?
+                        ''', (id_relato,))
+        
+        rows = cursor.fetchall()
+
+        if rows:
+            resultado_transformado = [list(row) for row in rows]
+            print(f"{resultado_transformado}")
+            conn.close()
+            return resultado_transformado
+        else:
+            lista_vazia = []  # Retorne uma lista vazia quando não houver registros
+            return lista_vazia
+        
+    except conn.Error as e:
+        return str(e)
+    
+
+def consultar_obs(id_relato):
+    conn = sql.connect('pelicula.db')
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''SELECT desc_nota, dt_nota 
+                            FROM nota_relato
+                            WHERE tp_nota = 'O' and id_relato = ?
+                        ''', (id_relato,))
+        
+        rows = cursor.fetchall()
+
+        if rows:
+            resultado_transformado = [list(row) for row in rows]
+            print(f"{resultado_transformado}")
+            conn.close()
+            return resultado_transformado
+        else:
+            lista_vazia = []  # Retorne uma lista vazia quando não houver registros
+            return lista_vazia
+        
+    except conn.Error as e:
+        return str(e)
