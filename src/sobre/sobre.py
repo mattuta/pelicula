@@ -10,14 +10,19 @@ from config import janela_altura, janela_largura, vers
 def sobre():
     sg.theme('Reddit')
 
+    sz=(15,20)
+    
+    col=[[sg.Text('', background_color='#ce4646', size=sz)]]
+    col_infos = [[sg.Text('PELÍCULA', font=('Bauhaus 93', 50), auto_size_text=True)],
+                 [sg.Text('Controle de Acervo Fotográfico', font=('Berlin Sans FB', 15, 'bold'))],
+                 [sg.HorizontalSeparator()],
+                 [sg.Text('DESENVOLVIDO POR:')], 
+                 [sg.Text("Matheus de Souza Silva")],
+                 [sg.Text('VERSÃO:', size=(15, 1))], 
+                 [sg.Text(vers)]
+                ]
 
-    layout = [
-        [sg.Text('SOBRE')],
-        [sg.Text('DESENVOLVIDO POR:')], 
-        [sg.Text("Matheus de Souza Silva")],
-        [sg.Text('VERSÃO:', size=(15, 1))], 
-        [sg.Text(vers)]
-    ]
+    layout = [[sg.Column(col, element_justification='l' ), sg.Column(col_infos, element_justification='c')]]
 
     window = sg.Window('SOBRE', layout, size=(500, 300))
 
@@ -33,3 +38,5 @@ def sobre():
             modulo_filme.tela_menu_principal()
 
     window.close()
+
+
